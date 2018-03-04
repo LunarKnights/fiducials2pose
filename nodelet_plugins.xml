@@ -1,0 +1,7 @@
+<library path="lib/libfiducials2pose_nodelet">
+  <class name="fiducials2pose/FiducialConverter"
+         type="fiducials2pose::FiducialConverter"
+         base_class_type="nodelet::Nodelet">
+    <description>This is the nodelet for converting fiducial messages into tf messages.</description>
+  </class>
+</library>
