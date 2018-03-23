@@ -1,15 +1,20 @@
 #include "ros/ros.h"
 
+#include <nodelet/nodelet.h>
+#include <pluginlib/class_list_macros.h>
 #include <fiducial_msgs/FiducialTransformArray.h>
 
 #include <geometry_msgs/TransformStamped.h>
 
 #include "fiducials2pose/fiducial_converter.h"
 
+PLUGINLIB_EXPORT_CLASS(fiducials2pose::FiducialConverter, nodelet::Nodelet);
+
 namespace fiducials2pose {
 
 FiducialConverter::FiducialConverter()
 {
+  // do nothing
 }
 
 void FiducialConverter::onInit()
@@ -18,6 +23,7 @@ void FiducialConverter::onInit()
   nhPrivate.param("camera_frame_id", cameraFrame, std::string("camera"));
   std::string fiducialTopicName;
   nhPrivate.param("fiducial_topic", fiducialTopicName, std::string("fiducials"));
+  std::string tfPrefix;
 
   if (!nhPrivate.getParam("fiducial_frame_ids", fiducialFrames))
   {
@@ -38,6 +44,7 @@ void FiducialConverter::fiducialCb(const fiducial_msgs::FiducialTransformArray &
       continue;
     }
     geometry_msgs::TransformStamped ts;
+    ts.header.stamp = msg.header.stamp;
     ts.header.frame_id = cameraFrame;
     ts.child_frame_id = fiducialFrames[ft.fiducial_id];
     ts.transform = ft.transform;
@@ -46,5 +53,5 @@ void FiducialConverter::fiducialCb(const fiducial_msgs::FiducialTransformArray &
   }
 }
 
-
 }
+
